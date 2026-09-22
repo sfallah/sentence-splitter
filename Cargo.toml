@@ -1,0 +1,58 @@
+[package]
+name = "sentence-splitter"
+version = "0.1.0"
+edition = "2021"
+license = "MIT OR Apache-2.0"
+description = "Sentence segmentation with two backends: the Punkt algorithm (trained, per-language) and ICU (UAX#29, script-aware), with optional language detection."
+repository = "https://github.com/sfallah/sentence-splitter"
+keywords = ["sentence", "segmentation", "punkt", "icu", "nlp"]
+categories = ["text-processing"]
+readme = "README.md"
+
+[dependencies]
+hashbrown = "0.15.5"
+num = "0.4.3"
+phf = { version = "0.12.1", features = ["macros"] }
+serde_json = "1.0"
+icu_segmenter = { version = "2.0", optional = true }
+whatlang = { version = "0.16.4", optional = true }
+
+[dev-dependencies]
+criterion = "0.7.0"
+
+[features]
+default = ["icu", "detect", "lang-english"]
+
+# Train new models from a corpus. Off by default: the vendored trainer is unsound
+# (see src/punkt/train.rs). Not needed to use the pretrained models.
+train = []
+
+# Backends.
+icu = ["dep:icu_segmenter"]
+# Automatic language detection, used by `Segmenter::auto`.
+detect = ["dep:whatlang"]
+
+# Punkt models. Each embeds that language's trained data (0.3-1.7 MB) and
+# parses it lazily, on first use.
+lang-czech = []
+lang-danish = []
+lang-dutch = []
+lang-english = []
+lang-estonian = []
+lang-finnish = []
+lang-french = []
+lang-german = []
+lang-greek = []
+lang-italian = []
+lang-norwegian = []
+lang-polish = []
+lang-portuguese = []
+lang-slovene = []
+lang-spanish = []
+lang-swedish = []
+lang-turkish = []
+lang-all = ["lang-czech", "lang-danish", "lang-dutch", "lang-english", "lang-estonian", "lang-finnish", "lang-french", "lang-german", "lang-greek", "lang-italian", "lang-norwegian", "lang-polish", "lang-portuguese", "lang-slovene", "lang-spanish", "lang-swedish", "lang-turkish"]
+
+[[bench]]
+name = "segmentation"
+harness = false
