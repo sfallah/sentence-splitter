@@ -70,6 +70,23 @@ break as a paragraph separator. `Newlines::Space` — the default — segments a
 were spaces, so a wrapped sentence stays whole. `Newlines::Separator` gives strict UAX#29.
 The setting only affects ICU; Punkt already treats newlines as ordinary whitespace.
 
+## Checking a dependency bump
+
+`examples/snapshot.rs` prints the decisions and boundaries this crate actually produces:
+which models are compiled in, trained-data lookups, the language the detector picks for
+thirteen samples and therefore which backend `auto` routes each to, both backends'
+boundaries explicitly, and the awkward inputs. Run it before and after a bump and diff.
+
+```sh
+cargo run --release --all-features --example snapshot > /tmp/before.txt
+# ...bump, cargo update...
+cargo run --release --all-features --example snapshot > /tmp/after.txt
+diff /tmp/before.txt /tmp/after.txt
+```
+
+The integration tests assert structural properties that hold whatever the detector does, so
+they would not notice `whatlang` rerouting a language from Punkt to ICU. This would.
+
 ## Attribution and licence
 
 The Punkt implementation in `src/punkt/` is vendored from
